@@ -1,5 +1,7 @@
 package kakao_tech_internship_2022;
 
+// 2022 카카오 테크 인턴십
+
 import java.util.ArrayList;
 
 public class Lv2_same_queue_sum {
