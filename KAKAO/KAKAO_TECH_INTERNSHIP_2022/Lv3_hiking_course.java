@@ -3,6 +3,9 @@ package kakao_tech_internship_2022;
 // 2022 카카오 테크 인턴십
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Queue;
 
 class Node {
     int idx;
@@ -20,10 +23,8 @@ public class Lv3_hiking_course {
     public static boolean[] isGate;
     public static boolean[] isSummit;
 
-    public static boolean[] visited;
-
-    public static int intensity = Integer.MAX_VALUE;
     public static int peakNum;
+    public static int cost = Integer.MAX_VALUE;
 
     public static void main(String[] args) {
 //        int n = 6;
@@ -52,19 +53,6 @@ public class Lv3_hiking_course {
 
     public static int[] solution(int n, int[][] paths, int[] gates, int[] summits) {
 
-        for (int i = 0; i < n + 1; i++) {
-            graph.add(new ArrayList<>());
-        }
-
-        for (int i = 0; i < paths.length; i++) {
-            int node1 = paths[i][0];
-            int node2 = paths[i][1];
-            int cost = paths[i][2];
-
-            graph.get(node1).add(new Node(node2, cost));
-            graph.get(node2).add(new Node(node1, cost));
-        }
-
         isGate = new boolean[n+1];
         for (int i : gates) {
             isGate[i] = true;
@@ -75,39 +63,93 @@ public class Lv3_hiking_course {
             isSummit[i] = true;
         }
 
-        peakNum = n + 1;
-        for (int i = 0; i < gates.length; i++) {
-            int curNode = gates[i];
-            visited = new boolean[n+1];
-            goPeak(curNode, -1);
+        for (int i = 0; i < n + 1; i++) {
+            graph.add(new ArrayList<>());
         }
 
-        int[] answer = {peakNum, intensity};
+        for (int i = 0; i < paths.length; i++) {
+            int node1 = paths[i][0];
+            int node2 = paths[i][1];
+            int cost = paths[i][2];
+
+            if (isGate[node1] || isSummit[node2]) {
+                graph.get(node1).add(new Node(node2, cost));
+            } else if (isGate[node2] || isSummit[node1]) {
+                graph.get(node2).add(new Node(node1, cost));
+            } else {
+                graph.get(node1).add(new Node(node2, cost));
+                graph.get(node2).add(new Node(node1, cost));
+            }
+        }
+
+        int[] intensity = dijkstra(n, gates);
+        Arrays.sort(summits);
+        for (int summit : summits) {
+            if (intensity[summit] < cost) {
+                cost = intensity[summit];
+                peakNum = summit;
+            }
+        }
+
+        int[] answer = {peakNum, cost};
         return answer;
     }
 
-    public static void goPeak(int curNode, int cost) {
+    public static int[] dijkstra(int n, int[] gates) {
+        int[] intensity = new int[n + 1];
+        Arrays.fill(intensity, Integer.MAX_VALUE);
 
-        if (isSummit[curNode]) {
-            if (intensity > cost) {
-                intensity = cost;
-                peakNum = curNode;
-            } else if (intensity == cost) {
-                peakNum = Math.min(peakNum, curNode);
-            }
-            return;
+        Queue<Node> queue = new LinkedList<>();
+        for (int gate : gates) {
+            queue.add(new Node(gate, 0));
+            intensity[gate] = 0;
         }
 
-        for (int i = 0; i < graph.get(curNode).size(); i++) {
-            int adjNode = graph.get(curNode).get(i).idx;
-            int adjNodeCost = graph.get(curNode).get(i).cost;
+        while (!queue.isEmpty()) {
+            Node cur = queue.poll();
+            int curNode = cur.idx;
+            int curCost = cur.cost;
 
-            if (!visited[adjNode]) {
-                visited[adjNode] = true;
-                if (cost < adjNodeCost) goPeak(adjNode, adjNodeCost);
-                else goPeak(adjNode, cost);
-                visited[adjNode] = false;
+            if (curCost < intensity[curNode]) continue;
+
+            for (int i = 0; i < graph.get(curNode).size(); i++) {
+                Node next = graph.get(curNode).get(i);
+                int nextNode = next.idx;
+                int nextCost = next.cost;
+
+                int dist = Math.max(intensity[curNode], nextCost);
+                if (intensity[nextNode] > dist) {
+                    intensity[nextNode] = dist;
+                    queue.add(new Node(nextNode, dist));
+                }
             }
         }
+
+        return intensity;
     }
+
+//    public static void goPeak(int curNode, int cost) {
+//
+//        if (isSummit[curNode]) {
+//            if (intensity > cost) {
+//                intensity = cost;
+//                peakNum = curNode;
+//            } else if (intensity == cost) {
+//                peakNum = Math.min(peakNum, curNode);
+//            }
+//            return;
+//        }
+//
+//        for (int i = 0; i < graph.get(curNode).size(); i++) {
+//            int adjNode = graph.get(curNode).get(i).idx;
+//            int adjNodeCost = graph.get(curNode).get(i).cost;
+//
+//            if (!visited[adjNode]) {
+//                visited[adjNode] = true;
+//                if (cost < adjNodeCost) goPeak(adjNode, adjNodeCost);
+//                else goPeak(adjNode, cost);
+//                visited[adjNode] = false;
+//            }
+//        }
+//    }
 }
