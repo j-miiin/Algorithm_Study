@@ -1,3 +1,7 @@
+
+// 백준 - 연구소 14502
+// https://www.acmicpc.net/problem/14502
+
 package baekjoon.graph_traversal;
 
 import java.io.BufferedReader;
@@ -19,10 +23,10 @@ public class laboratory_14502 {
 
     public static int N, M;
     public static int[][] map;
+    public static int[][] curMap;
 
     public static ArrayList<int[]> emptyList = new ArrayList<>();
     public static Queue<int[]> virusQueue = new LinkedList<>();
-    public static boolean[][] isInfected;
     public static boolean[][] visited;
 
     public static boolean[] checkWall;
@@ -37,7 +41,6 @@ public class laboratory_14502 {
         M = Integer.parseInt(st.nextToken());
         map = new int[N][M];
 
-        isInfected = new boolean[N][M];
         visited = new boolean[N][M];
 
         for (int i = 0; i < N; i++) {
@@ -45,10 +48,7 @@ public class laboratory_14502 {
             for (int j = 0; j < M; j++) {
                 int cur = Integer.parseInt(st.nextToken());
                 if (cur == EMPTY) emptyList.add(new int[]{i, j});
-                else if (cur == VIRUS) {
-                    isInfected[i][j] = true;
-                    virusQueue.offer(new int[]{i, j});
-                }
+                else if (cur == VIRUS) virusQueue.offer(new int[]{i, j});
                 map[i][j] = cur;
             }
         }
@@ -64,11 +64,7 @@ public class laboratory_14502 {
         if (count == 3) {
             buildWall();
             spreadVirus();
-            for (int i = 0; i < N; i++) {
-                for (int j = 0; j < M; j++) {
-                    if (!visited[i][j] && map[i][j] == EMPTY) result = Math.max(result, checkSafeArea(i, j));
-                }
-            }
+            result = Math.max(result, checkSafeArea());
             removeWall();
             return;
         }
@@ -102,38 +98,22 @@ public class laboratory_14502 {
 
     public static void spreadVirus() {
 
-        while(!virusQueue.isEmpty()) {
-            int[] cur = virusQueue.poll();
-            int curX = cur[0];
-            int curY = cur[1];
-
-            for (int i = 0; i < 4; i++) {
-                int nextX = curX + dx[i];
-                int nextY = curY + dy[i];
-
-                if (nextX < 0 || nextY < 0 || nextX >= N || nextY >= M) continue;
-
-                if (!isInfected[nextX][nextY] && map[nextX][nextY] == EMPTY) {
-                    isInfected[nextX][nextY] = true;
-                    map[nextX][nextY] = VIRUS;
-                    virusQueue.offer(new int[]{nextX, nextY});
-                }
+        curMap = new int[N][M];
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < M; j++) {
+                curMap[i][j] = map[i][j];
             }
         }
-    }
 
-    public static int checkSafeArea(int x, int y) {
-
-        int count = 0;
-
-        visited[x][y] = true;
+        boolean[][] isInfected = new boolean[N][M];
         Queue<int[]> queue = new LinkedList<>();
-        queue.offer(new int[]{x, y});
+        for (int[] i : virusQueue) queue.offer(i);
 
         while(!queue.isEmpty()) {
             int[] cur = queue.poll();
             int curX = cur[0];
             int curY = cur[1];
+            isInfected[curX][curY] = true;
 
             for (int i = 0; i < 4; i++) {
                 int nextX = curX + dx[i];
@@ -141,13 +121,23 @@ public class laboratory_14502 {
 
                 if (nextX < 0 || nextY < 0 || nextX >= N || nextY >= M) continue;
 
-                if (!visited[nextX][nextY] && map[nextX][nextY] == EMPTY) {
-                    visited[nextX][nextY] = true;
-                    count++;
+                if (!isInfected[nextX][nextY] && curMap[nextX][nextY] == EMPTY) {
+                    isInfected[nextX][nextY] = true;
+                    curMap[nextX][nextY] = VIRUS;
+                    queue.offer(new int[]{nextX, nextY});
                 }
             }
         }
+    }
 
+    public static int checkSafeArea() {
+
+        int count = 0;
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < M; j++) {
+                if (curMap[i][j] == EMPTY) count++;
+            }
+        }
         return count;
     }
 }
