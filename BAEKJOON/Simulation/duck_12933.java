@@ -31,8 +31,30 @@ public class duck_12933 {
 
         switch (str) {
             case "q":
+                if (quackList.size() != 0) {
+                    for (int i = 0; i < quackList.size(); i++) {
+                        if (!quackList.get(i).equals("k")) i++;
+                        else {
+                            quackList.set(i, "q");
+                            break;
+                        }
+                    }
+                } else {
+                    quackList.add("q");
+                }
                 break;
             case "u":
+                if (quackList.size() != 0) {
+                    for (int i = 0; i < quackList.size(); i++) {
+                        if (!quackList.get(i).equals("k")) i++;
+                        else {
+                            quackList.set(i, "q");
+                            break;
+                        }
+                    }
+                } else {
+                    quackList.add("q");
+                }
                 break;
             case "a":
                 break;
@@ -42,5 +64,6 @@ public class duck_12933 {
                 break;
 
         }
+        return true;
     }
 }
