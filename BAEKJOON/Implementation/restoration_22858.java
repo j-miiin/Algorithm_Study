@@ -11,7 +11,7 @@ import java.util.StringTokenizer;
 public class restoration_22858 {
 
     public static int N, K;
-    public static int[] P, S;
+    public static int[] S, D;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -19,13 +19,21 @@ public class restoration_22858 {
         N = Integer.parseInt(st.nextToken());
         K = Integer.parseInt(st.nextToken());
 
-        P = new int[N];
         S = new int[N];
-
-        st = new StringTokenizer(br.readLine());
-        for (int i = 0; i < N; i++) P[i] = Integer.parseInt(st.nextToken());
+        D = new int[N];
 
         st = new StringTokenizer(br.readLine());
         for (int i = 0; i < N; i++) S[i] = Integer.parseInt(st.nextToken());
+
+        st = new StringTokenizer(br.readLine());
+        for (int i = 0; i < N; i++) D[i] = Integer.parseInt(st.nextToken());
+
+        for (int i = 0; i < N; i++) {
+            
+        }
     }
 }
+
+
+
+
