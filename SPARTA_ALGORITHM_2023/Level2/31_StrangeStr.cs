@@ -17,19 +17,23 @@ namespace Sparta_CS_Algorithm_Study_2023.Algorithm_Code_Kata.Level2
         {
             public static string solution(string s)
             {
-                string answer = "";
-                string[] strArr = s.Split(' ');
                 StringBuilder sb = new StringBuilder();
-                foreach (string str in strArr)
+                int idx = 0;
+                for (int i = 0; i < s.Length; i++)
                 {
-                    for (int i = 0; i < str.Length; i++)
-                    {
-                        if (i % 2 == 0) sb.Append((str[i] + "").ToUpper());
-                         else sb.Append((str[i] + "").ToLower());
+                    string cur = s[i] + "";
+                    if (cur == " ") {
+                        sb.Append(cur);
+                        idx = 0;
                     }
-                    sb.Append(" ");
+                    else
+                    {
+                        if (idx % 2 == 0) sb.Append(cur.ToUpper());
+                        else sb.Append(cur.ToLower());
+                        idx++;
+                    }
                 }
-                answer = sb.ToString().TrimEnd(' ');
+                string answer = sb.ToString();
                 return answer;
             }
         }
