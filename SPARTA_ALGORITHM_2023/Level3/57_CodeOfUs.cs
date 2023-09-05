@@ -27,7 +27,11 @@ namespace Sparta_CS_Algorithm_Study_2023.Algorithm_Code_Kata.Level3
                     {
                         curStr = (char)(curStr + 1);
                         if (curStr.CompareTo('z') > 0) curStr = (char)(curStr - 26);
-                        while (skip.Contains(curStr)) curStr = (char)(curStr + 1);
+                        while (skip.Contains(curStr))
+                        {
+                            curStr = (char)(curStr + 1);
+                            if (curStr.CompareTo('z') > 0) curStr = (char)(curStr - 26);
+                        }
                     }
                     answer += curStr;
                 }
