@@ -8,10 +8,14 @@ namespace Sparta_CS_Algorithm_Study_2023.Algorithm_Code_Kata.Level3
 {
     internal class PersonalInfo
     {
+        static void Main(string[] args)
+        {
+            Console.WriteLine(string.Join(", ", Solution.solution("2016.02.15", new string[] { "A 100" }, new string[] { "2000.06.16 A", "2008.02.15 A" })));
+        }
         public class Solution
         {
             static int year, month, day;
-            public int[] solution(string today, string[] terms, string[] privacies)
+            public static int[] solution(string today, string[] terms, string[] privacies)
             {
                 List<int> result = new List<int>();
 
@@ -31,7 +35,7 @@ namespace Sparta_CS_Algorithm_Study_2023.Algorithm_Code_Kata.Level3
                 for (int i = 0; i < privacies.Length; i++)
                 {
                     string[] privaciesStr = privacies[i].Split(' ');
-                    if (!isExpired(privaciesStr[0], termDic.GetValueOrDefault(privaciesStr[1])))
+                    if (isExpired(privaciesStr[0], termDic.GetValueOrDefault(privaciesStr[1])))
                     {
                         result.Add(i + 1);
                     }
@@ -49,24 +53,25 @@ namespace Sparta_CS_Algorithm_Study_2023.Algorithm_Code_Kata.Level3
                 int d = int.Parse(dateStr[2]);
 
                 m += term;
-                if (m > 12)
+                while (m > 12)
                 {
                     m -= 12;
                     y++;
                 }
 
                 d--;
-                if (d == 0)
+                if (d < 1)
                 {
                     m--;
                     d = 28;
                 }
+                Console.WriteLine(y + ", " + m + ", " + d);
 
-                if (y > year) return false;
-                else if (m > month) return false;
-                else if (d > day) return false;
+                if (y < year) return true;
+                else if (y == year && m < month) return true;
+                else if (y == year && m == month && d < day) return true;
 
-                return true;
+                return false;
             }
         }
     }
