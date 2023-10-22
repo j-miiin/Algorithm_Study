@@ -13,39 +13,40 @@ namespace Sparta_CS_Algorithm_Study_2023.Algorithm_Code_Kata.Level4
         {
             public int solution(int[] order)
             {
-                Stack<int> mainStack = new Stack<int>();
-                Stack<int> subStack = new Stack<int>();
-
-                for (int i = 0; i < order.Length; i++) {
-                    mainStack.Push(order.Length - i);
-                }
-
                 int answer = 0;
+
                 int idx = 0;
-                while (idx < order.Length)
+                Stack<int> stack = new Stack<int>();
+                
+                for (int i = 1; i <= order.Length; i++)
                 {
-                    if (order[idx] == mainStack.Peek())
+                    bool isRight = false;
+
+                    if (i == order[idx])
                     {
-                        mainStack.Pop();
                         idx++;
                         answer++;
-                    } else
-                    {
-                        if (mainStack.Count > 0) subStack.Push(mainStack.Pop());
-
-                        if (subStack.Count > 0 && subStack.Peek() == order[idx])
-                        {
-                            subStack.Pop();
-                            idx++;
-                            answer++;
-                        }
-                        else
-                        {
-                            subStack.Push(order[idx]);
-                        }
+                        isRight = true;
                     }
+
+                    while (stack.Count > 0 && stack.Peek() == order[idx])
+                    {
+                        stack.Pop();
+                        idx++;
+                        answer++;
+                        isRight = true;
+                    }
+
+                    if (!isRight) stack.Push(i);
                 }
-                
+
+                while (stack.Count > 0 && stack.Peek() == order[idx])
+                {
+                    stack.Pop();
+                    idx++;
+                    answer++;
+                }
+
                 return answer;
             }
         }
