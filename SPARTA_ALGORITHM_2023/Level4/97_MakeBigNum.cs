@@ -13,7 +13,6 @@ namespace Sparta_CS_Algorithm_Study_2023.Algorithm_Code_Kata.Level4
             Console.WriteLine(Solution.solution("1924", 2));
         }
 
-        // 테스트케이스 10번 시간 초과
         public class Solution
         {
             public static string solution(string number, int k)
