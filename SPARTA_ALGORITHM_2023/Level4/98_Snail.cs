@@ -10,56 +10,66 @@ namespace Sparta_CS_Algorithm_Study_2023.Algorithm_Code_Kata.Level4
     {
         static void Main(string[] args)
         {
-            Console.WriteLine(string.Join(", ", Solution.solution(6)));
+            Console.WriteLine(string.Join(", ", Solution.solution(4)));
         }
 
         public class Solution
         {
             public static int[] solution(int n)
             {
+                if (n == 1) return new int[]{ 1 };
+
                 int length = (n * n + n) / 2;
-                int curNum = 1;
 
                 int[,] snail = new int[n, n];
-                int start = 0;
-                int end = n - 1;
+
+                int[] dx = { 1, 0, -1 };
+                int[] dy = { 0, 1, -1 };
+
+                int dir = 0;
+                int startX = 0, startY = 0;
+                int curX = startX, curY = startY;
+
+                int cnt = 0;
+                int curLength = n - 1;
+                int curNum = 1;
                 while (curNum <= length)
                 {
-                    Console.WriteLine($"start = {start}, end = {end}");
+                    Console.WriteLine($"curX {curX}, curY {curY}");
+                    Console.WriteLine($"curNum {curNum}");
+                    snail[curX, curY] = curNum++;
 
-                    for (int i = start; i <= end - 1 && curNum <= length; i++)
+                    cnt++;
+                    Console.WriteLine($"cnt {cnt}, curLength {curLength}");
+
+                    if (cnt % curLength == 0)
                     {
-                        snail[i, start] = curNum++;
-                        Console.WriteLine($"snail[{i}, {start}] = {snail[i, start]}");
+                        cnt = 0;
+                        dir = (dir + 1) % 3;
+                        Console.WriteLine($"dir {dir}");
+
+                        if (dir % 3 == 0)
+                        {
+                            curLength -= 2;
+
+                            startX += 2;
+                            startY += 1;
+                            curX = startX;
+                            curY = startY;
+                        }
                     }
 
-                    Console.WriteLine();
-
-                    for (int i = start; i < end && curNum <= length; i++)
-                    {
-                        snail[end, i] = curNum++;
-                        Console.WriteLine($"snail[{end}, {i}] = {snail[end, i]}");
-                    }
-
-                    Console.WriteLine();
-
-                    for (int i = end; i > start + 1 && curNum <= length; i--)
-                    {
-                        snail[i, i] = curNum++;
-                        Console.WriteLine($"snail[{i}, {i}] = {snail[i, i]}");
-                    }
-
-                    Console.WriteLine();
-
-                    start++;
-                    end--;
+                    curX += dx[dir];
+                    curY += dy[dir];
                 }
+
+                Console.WriteLine();
 
                 for (int i = 0; i < n; i++)
                 {
-                    for (int j = 0; j < n; j++)
+                    for (int j = 0; j <= i; j++)
                     {
-                        Console.Write(snail[i, j] + ", ");
+                        Console.Write($"{snail[i, j]} ");
                     }
                     Console.WriteLine();
                 }
