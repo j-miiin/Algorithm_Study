@@ -12,45 +12,39 @@ namespace Sparta_CS_Algorithm_Study_2023.Algorithm_Code_Kata.Level4
         {
             static void Main(string[] args)
             {
-                Console.WriteLine(Solution.solution(new int[] { 1, 2, 3, 4, 5 }, 7));
+                Console.WriteLine(string.Join(", ", Solution.solution(new int[] { 2, 2, 2, 2, 2 }, 6)));
             }
             public static int[] solution(int[] sequence, int k)
             {
-                int[] prefixSum = new int[sequence.Length];
-                prefixSum[0] = sequence[0];
-                for (int i = 1; i < sequence.Length; i++)
+                if (sequence[0] == k) return new int[] { 0, 0 };
+
+                int[] prefixSum = new int[sequence.Length + 1];
+                for (int i = 1; i <= sequence.Length; i++)
                 {
-                    prefixSum[i] = prefixSum[i - 1] + sequence[i];
+                    prefixSum[i] = prefixSum[i - 1] + sequence[i - 1];
                 }
 
-                int start = -1, end = 0;
+                int start = 0, end = 1;
                 int minStart = 0, minEnd = prefixSum.Length;
                 int sum = 0;
-                while (start <= end && end <= prefixSum.Length)
+                while (start <= end && end < prefixSum.Length)
                 {
-                    Console.WriteLine($"start {start}, end {end}, sum {sum}");
-                    if (start == -1) sum = prefixSum[end];
-                    else if (end == prefixSum.Length) sum = prefixSum[end - 1];
-                    else sum = prefixSum[end] - prefixSum[start];
+                    sum = prefixSum[end] - prefixSum[start];
 
                     if (sum > k) start++;
                     else if (sum < k) end++;
                     else
                     {
-                        int length = minEnd - minStart + 1;
-                        int curLength = end - start + 1;
-                        if (start == -1) curLength = end + 1;
-
-                        if (curLength < length)
+                        if ((end - start) < (minEnd - minStart))
                         {
                             minStart = start;
                             minEnd = end;
-                            if (length == 1) break;
                         }
+                        end++;
                     }
                 }
 
-                int[] answer = new int[] { minStart, minEnd};
+                int[] answer = new int[] { minStart, minEnd - 1 };
                 return answer;
             }
         }
