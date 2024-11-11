@@ -55,23 +55,12 @@ namespace Sparta_CS_Algorithm_Study_2023.Baekjoon.Gold4
                 + Dijkstra(node2, node1, N, graph)
                 + Dijkstra(node1, N, N, graph);
 
-            int r3 = Dijkstra(1, node1, N, graph)
-                + Dijkstra(node1, node2, N, graph)
-                + Dijkstra(node2, node1, N, graph)
-                + Dijkstra(node1, N, N, graph);
-
-            int r4 = Dijkstra(1, node2, N, graph)
-                + Dijkstra(node2, node1, N, graph)
-                + Dijkstra(node1, node2, N, graph)
-                + Dijkstra(node2, N, N, graph);
-
-            if ((r1 < 0 || r1 >= INF) && (r2 < 0 || r2 >= INF)
-                && (r3 < 0 || r3 >= INF) && (r4 < 0 || r4 >= INF))
+            if ((r1 < 0 || r1 >= INF) && (r2 < 0 || r2 >= INF))
             {
                 Console.WriteLine(-1);
             } else
             {
-                Console.WriteLine(Math.Min(r1, Math.Min(r2, Math.Min(r3, r4))));
+                Console.WriteLine(Math.Min(r1, r2));
             }
         }
 
